@@ -26,7 +26,7 @@ export class Cirql extends CirqlBaseImpl {
 	constructor(surrealOrOptions?: Surreal | CirqlOptions, options?: CirqlOptions) {
 		super({
 			onQuery: (query, params) => this.handle!.query(query, params),
-			onRequest: () => !!this.handle && this.handle.status == ConnectionStatus.Disconnected,
+			onRequest: () => !!this.handle && this.handle.status == ConnectionStatus.Connected,
 			onLog: (query, params) => {
 				if (this.options.logging) {
 					this.options.logPrinter?.(query, params);

@@ -5,7 +5,7 @@
 		"type": "git",
 		"url": "https://github.com/PrideVRInc/cirql"
 	},
-	"version": "1.0.2",
+	"version": "1.0.3",
 	"type": "module",
 	"files": [
 		"dist"
