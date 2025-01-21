@@ -1,5 +1,6 @@
 {
 	"name": "@pridevr/cirql",
+	"description": "SurrealDB ORM & Query Builder",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/PrideVRInc/cirql"
