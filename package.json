@@ -17,19 +17,19 @@
 		"test": "vitest",
 		"coverage": "vitest run --coverage",
 		"dev": "vite",
-		"build": "rm -rf dist && tsc && vite build && tsup ./lib/index.ts --dts --dts-only",
+		"build": "tsc && vite build && tsup ./lib/index.ts --dts --dts-only",
 		"prepublishOnly": "pnpm run test --run && pnpm run build"
 	},
 	"devDependencies": {
 		"@types/ws": "^8.5.4",
-		"@vitest/coverage-c8": "^0.29.3",
+		"@vitest/coverage-v8": "^3.0.3",
 		"tsup": "^6.5.0",
 		"typescript": "^5.0.0",
 		"vite": "^4.5.0"
 	},
 	"dependencies": {
 		"isomorphic-ws": "^5.0.0",
-		"vitest": "^0.29.2"
+		"vitest": "^3.0.3"
 	},
 	"peerDependencies": {
 		"surrealdb": "^1.1.0",

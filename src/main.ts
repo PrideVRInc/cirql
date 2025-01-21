@@ -22,7 +22,7 @@ import { z } from 'zod';
 const database = new Cirql();
 
 export const OrganisationSchema = RecordSchema.extend({
-    name: z.string().min(1),
+	name: z.string().min(1),
 	isEnabled: z.boolean(),
 	createdAt: z.string()
 });
@@ -178,7 +178,7 @@ function setConnected(connected: boolean) {
 
 	text.innerText = connected ? 'SurrealDB connection active' : 'Not connected';
 	text.style.color = connected ? 'green' : 'red';
-	
+
 	if (connected) {
 		send.removeAttribute('disabled');
 	} else {
@@ -201,9 +201,9 @@ async function sendQuery() {
 		}
 
 		get('output').innerHTML = output;
-	} catch(err) {
+	} catch (err) {
 		console.error(err);
-		
+
 		get('output').innerHTML = `
 			<div><b>Query failure</div>
 			<pre style="color: red">${JSON.stringify(err, null, 4)}</pre>
@@ -222,9 +222,8 @@ get('connect').addEventListener('click', async () => {
 			username: 'root',
 			password: 'root',
 		},
-	});
-
-	await database.handle.wait();
+	})
+	await (database.handle.ready || new Promise(res => { database.handle.emitter.subscribe("connected", () => res()) }))
 });
 
 get('disconnect').addEventListener('click', () => {

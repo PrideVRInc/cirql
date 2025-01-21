@@ -1,6 +1,6 @@
 import { CirqlOptions } from "../types";
 import { CirqlBaseImpl } from "./base";
-import { Surreal } from "surrealdb.js";
+import { ConnectionStatus, Surreal } from "surrealdb";
 
 type RequiredOptions = Required<CirqlOptions>;
 
@@ -16,7 +16,7 @@ type RequiredOptions = Required<CirqlOptions>;
  * You can retrieve the underlying surreal handle using the `handle` property.
  */
 export class Cirql extends CirqlBaseImpl {
-	
+
 	readonly options: RequiredOptions;
 
 	#surreal: Surreal;
@@ -26,7 +26,7 @@ export class Cirql extends CirqlBaseImpl {
 	constructor(surrealOrOptions?: Surreal | CirqlOptions, options?: CirqlOptions) {
 		super({
 			onQuery: (query, params) => this.handle!.query(query, params),
-			onRequest: () => !!this.handle && this.handle.status == 0,
+			onRequest: () => !!this.handle && this.handle.status == ConnectionStatus.Disconnected,
 			onLog: (query, params) => {
 				if (this.options.logging) {
 					this.options.logPrinter?.(query, params);
@@ -42,11 +42,10 @@ export class Cirql extends CirqlBaseImpl {
 			handle = surrealOrOptions;
 		} else {
 			opts = surrealOrOptions || {};
-			handle = new Surreal({
-				onConnect: () => this.dispatchEvent(new Event('open')),
-				onClose: () => this.dispatchEvent(new Event('close')),
-				onError: () => this.dispatchEvent(new Event('error'))
-			});
+			handle = new Surreal();
+			handle.emitter.subscribe("connected", () => this.dispatchEvent(new Event('open')));
+			handle.emitter.subscribe("disconnected", () => this.dispatchEvent(new Event('close')));
+			handle.emitter.subscribe("error", () => this.dispatchEvent(new Event('error')));
 		}
 
 		this.#surreal = handle;
