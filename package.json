@@ -1,5 +1,9 @@
 {
 	"name": "@pridevr/cirql",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/PrideVRInc/cirql"
+	},
 	"version": "1.0.2",
 	"type": "module",
 	"files": [
