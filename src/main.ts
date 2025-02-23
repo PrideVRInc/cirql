@@ -224,13 +224,12 @@ async function sendQuery() {
 setConnected(false);
 
 get('connect').addEventListener('click', async () => {
-	await database.handle.connect('http://localhost:8000', {
+	await database.handle.connect('http://localhost:8000')
+	await database.handle.signin({
 		namespace: 'test',
 		database: 'test',
-		auth: {
-			username: 'root',
-			password: 'root',
-		},
+		username: 'root',
+		password: 'root',
 	})
 	await (database.handle.ready || new Promise(res => { database.handle.emitter.subscribe("connected", () => res()) }))
 });
