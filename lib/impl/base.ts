@@ -1,6 +1,6 @@
 import { ZodTypeAny } from "zod";
 import { Quantity } from "../writer";
-import { CirqlError, CirqlParseError, CirqlQueryError } from "../errors";
+import { CirqlError, CirqlQueryError } from "../errors";
 import { MultiTypeOf, Params, QueryRequest, SoloTypeOf } from "../types";
 import { AuthenticationDetails, RegistrationDetails } from "../types";
 
@@ -116,7 +116,7 @@ export abstract class CirqlBaseImpl extends EventTarget {
 
 		for (let i = 0; i < response.length; i++) {
 			const result = response[i];
-			const { query, schema, validate } = options.queries[i];
+			const { query, validate } = options.queries[i];
 			const quantity = query._quantity as Quantity;
 
 			if (quantity == 'zero') {
