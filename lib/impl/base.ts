@@ -124,7 +124,6 @@ export abstract class CirqlBaseImpl extends EventTarget {
 				continue;
 			}
 
-			console.log(result)
 			const transformed: any[] = query._transform?.(result) ?? result;
 			const resultList = Array.isArray(transformed) ? transformed : [transformed];
 
