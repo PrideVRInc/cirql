@@ -35,7 +35,7 @@ async function execute() {
 		toId: type.thing('person', 'david')
 	}
 
-	return await database.transaction(
+	const yesres = await database.transaction(
 		{
 			query: query('INFO FOR DB').with(z.string()).single(),
 			validate: false
@@ -81,10 +81,7 @@ async function execute() {
 				.with(RecordSchema)
 				.set('name', 'David'),
 		},
-		{
-			query: relateRelation(relation)
-				.with(EdgeSchema)
-		},
+		// intentionally create a query that will fail
 		{
 			query: updateRelation(relation)
 				.with(EdgeSchema)
@@ -156,6 +153,18 @@ async function execute() {
 			query: count('unknownTable')
 		}
 	);
+
+	// intentionally create a query that will fail
+	await database.execute(
+		{
+			query: select().from('organisation').with(RecordSchema).where({
+				createdAt: letValue('date', time.now())
+			}),
+			validate: false
+		});
+
+	return yesres;
+
 }
 
 database.addEventListener('open', async () => {

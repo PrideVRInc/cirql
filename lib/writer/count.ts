@@ -24,19 +24,19 @@ interface CountQueryState {
  * to ensure the record id has an intended table name.
  */
 export class CountQueryWriter implements QueryWriter<ZodNumber, 'one'> {
-	
+
 	readonly #state: CountQueryState;
 
 	constructor(state: CountQueryState) {
 		this.#state = state;
 	}
-	
+
 	readonly _fallback = 0;
 	readonly _schema = z.number();
 	readonly _quantity = 'one'
 
 	get _state() {
-		return Object.freeze({...this.#state});
+		return Object.freeze({ ...this.#state });
 	}
 
 	/**
@@ -47,13 +47,13 @@ export class CountQueryWriter implements QueryWriter<ZodNumber, 'one'> {
 	 * @param where The where clause
 	 * @returns The query writer
 	 */
-	where<T extends Schema = null>(where: string|Where<T>) {
+	where<T extends Schema = null>(where: string | Where<T>) {
 		if (this.#state.relation) {
 			throw new CirqlWriterError('Cannot use where clause with countRelation');
 		}
 
 		if (typeof where === 'object') {
-			where = parseWhereClause(where);	
+			where = parseWhereClause(where);
 		}
 
 		return new CountQueryWriter({

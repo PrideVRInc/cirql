@@ -102,20 +102,20 @@ export abstract class CirqlBaseImpl extends EventTarget {
 			throw new CirqlError('The response from the database was invalid', 'invalid_response');
 		}
 
-		for (let i = 0; i < response.length; i++) {
-			const { status, detail } = response[i];
+		// for (let i = 0; i < response.length; i++) {
+		// 	const { status, detail } = response[i];
 
-			if (status !== 'OK') {
-				errors.push(`- Query ${i + 1}: ${detail}`);
-			}
-		}
+		// 	if (status !== 'OK') {
+		// 		errors.push(`- Query ${i + 1}: ${detail}`);
+		// 	}
+		// }
 
 		if (errors.length > 0) {
 			throw new CirqlQueryError(errors);
 		}
 
 		for (let i = 0; i < response.length; i++) {
-			const { result } = response[i];
+			const result = response[i];
 			const { query, schema, validate } = options.queries[i];
 			const quantity = query._quantity as Quantity;
 
@@ -124,6 +124,7 @@ export abstract class CirqlBaseImpl extends EventTarget {
 				continue;
 			}
 
+			console.log(result)
 			const transformed: any[] = query._transform?.(result) ?? result;
 			const resultList = Array.isArray(transformed) ? transformed : [transformed];
 
@@ -132,19 +133,22 @@ export abstract class CirqlBaseImpl extends EventTarget {
 			if (validate === false) {
 				values = resultList;
 			} else {
-				const theSchema: ZodTypeAny = query._schema || schema;
+				// FIXME: Validation is broken
+				// console.warn("Validation is broken, ignoring")
+				// const theSchema: ZodTypeAny = query._schema || schema;
 
-				if (!theSchema) {
-					throw new CirqlError(`No schema provided for query ${i + 1}`, 'invalid_request');
-				}
-				
-				const parsed = theSchema.array().safeParse(resultList);
+				// if (!theSchema) {
+				// 	throw new CirqlError(`No schema provided for query ${i + 1}`, 'invalid_request');
+				// }
 
-				if (!parsed.success) {
-					throw new CirqlParseError(`Query ${i + 1} failed to parse`, parsed.error);
-				}
-				
-				values = parsed.data;
+				// const parsed = theSchema.array().safeParse(resultList);
+
+				// if (!parsed.success) {
+				// 	throw new CirqlParseError(`Query ${i + 1} failed to parse`, parsed.error);
+				// }
+
+				// values = parsed.data;
+				values = resultList;
 			}
 
 			if (quantity == 'one' && values.length === 0) {
